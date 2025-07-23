@@ -1,4 +1,5 @@
 // #![forbid(missing_docs)]
+
 use std::time::Duration;
 
 pub(crate) const TANTIVY_INDEX_MEMORY_BUDGET: usize = 50_000_000;

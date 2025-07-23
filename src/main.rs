@@ -31,20 +31,30 @@ fn main() -> Result<(), IndexError> {
     let res = index.search("week", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
-        println!();
+        println!()
     }
+    println!("-------");
 
     let res = index.search("the", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
         println!();
     }
+    println!("-------");
 
     let res = index.search("cuter", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
         println!();
     }
+    println!("-------");
+
+    let res = index.search("*", 10)?;
+    for i in res.iter() {
+        print!("{i:?}, ");
+        println!();
+    }
+    println!("-------");
 
     Ok(())
 }

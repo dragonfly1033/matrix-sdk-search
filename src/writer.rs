@@ -1,4 +1,5 @@
 // #![forbid(missing_docs)]
+
 use std::time::Instant;
 
 use tantivy::{IndexWriter, TantivyDocument, TantivyError};
@@ -37,12 +38,10 @@ impl SearchIndexWriter {
         if (self.document_count >= MIN_COMMIT_SIZE)
             || (Instant::now() - self.last_commit_time > MAX_COMMIT_TIME)
         {
-            println!("conditions met for real commit");
             self.last_commit_opstamp = self.commit_impl()?;
             self.last_commit_time = Instant::now();
             self.document_count = 0;
         } else {
-            println!("conditions not met. fake commit.");
             self.document_count += 1;
         }
 

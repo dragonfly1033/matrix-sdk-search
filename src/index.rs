@@ -6,25 +6,32 @@ use std::path::Path;
 use tantivy::collector::TopDocs;
 use tantivy::directory::MmapDirectory;
 use tantivy::query::QueryParser;
-use tantivy::{Index, Searcher, TantivyDocument};
+use tantivy::schema::OwnedValue;
+use tantivy::{Index, IndexReader, TantivyDocument};
 
 pub struct RoomIndex {
     schema: RoomMessageSchema,
     writer: SearchIndexWriter,
-    searcher: Searcher,
+    reader: IndexReader,
     query_parser: QueryParser,
+}
+
+impl RoomIndex {
+    pub fn intoo(&self) -> Index {
+        self.reader.searcher().index().to_owned()
+    }
 }
 
 impl RoomIndex {
     fn new_with(index: Index, schema: RoomMessageSchema) -> Result<RoomIndex, IndexError> {
         let writer = index.writer(TANTIVY_INDEX_MEMORY_BUDGET)?;
         let reader = index.reader_builder().try_into()?;
-        let searcher = reader.searcher();
+
         let query_parser = QueryParser::for_index(&index, schema.default_search_fields());
         Ok(Self {
             schema,
             writer: writer.into(),
-            searcher,
+            reader,
             query_parser,
         })
     }
@@ -66,24 +73,29 @@ impl RoomIndex {
     }
 
     pub fn force_commit(&mut self) -> Result<OpStamp, IndexError> {
-        self.writer.force_commit()
+        let opstamp = self.writer.force_commit()?;
+        self.reader.reload()?;
+
+        Ok(opstamp)
     }
 
     // TODO: probably make a query builder
     pub fn search(&self, query: &str, number_of_results: usize) -> Result<Vec<String>, IndexError> {
         let query = self.query_parser.parse_query(query)?;
+        let searcher = self.reader.searcher();
 
-        let results = self
-            .searcher
-            .search(&query, &TopDocs::with_limit(number_of_results))?;
+        let results = searcher.search(&query, &TopDocs::with_limit(number_of_results))?;
         let mut ret: Vec<String> = Vec::new();
         let pk = self.schema.primary_key();
 
         for (_score, doc_address) in results {
-            let retrieved_doc: TantivyDocument = self.searcher.doc(doc_address)?;
+            let retrieved_doc: TantivyDocument = searcher.doc(doc_address)?;
             for f in retrieved_doc.get_all(pk) {
                 // TODO: what does this really do
-                ret.push(format!("{f:?}"));
+                match f {
+                    OwnedValue::Str(s) => ret.push(s.to_string()),
+                    _ => println!("how"),
+                };
             }
         }
 
