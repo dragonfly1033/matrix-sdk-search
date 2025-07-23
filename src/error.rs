@@ -1,4 +1,4 @@
-#[forbid(missing_docs)]
+// #![forbid(missing_docs)]
 use tantivy::directory::error::OpenDirectoryError as TantivyOpenDirectoryError;
 use tantivy::query::QueryParserError as TantivyQueryParserError;
 use thiserror::Error;

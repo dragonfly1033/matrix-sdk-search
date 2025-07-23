@@ -1,3 +1,4 @@
+// #![forbid(missing_docs)]
 use std::time::Instant;
 
 use tantivy::{IndexWriter, TantivyDocument, TantivyError};
@@ -16,12 +17,12 @@ pub(crate) struct SearchIndexWriter {
     // TODO: maybe differentiate a last_stage_opstamp as well
 }
 
-impl Into<SearchIndexWriter> for IndexWriter {
-    fn into(self) -> SearchIndexWriter {
+impl From<IndexWriter> for SearchIndexWriter {
+    fn from(writer: IndexWriter) -> Self {
         SearchIndexWriter {
-            last_commit_opstamp: self.commit_opstamp(),
+            last_commit_opstamp: writer.commit_opstamp(),
             last_commit_time: Instant::now(),
-            inner: self,
+            inner: writer,
             document_count: 0,
         }
     }

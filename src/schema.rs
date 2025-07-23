@@ -1,3 +1,4 @@
+// #![forbid(missing_docs)]
 use tantivy::{
     doc,
     schema::{Field, Schema, INDEXED, STORED, STRING, TEXT},
@@ -55,7 +56,7 @@ impl RoomMessageSchema {
     }
 
     pub(crate) fn as_tantivy_schema(&self) -> Schema {
-        return self.inner.clone();
+        self.inner.clone()
     }
 
     pub(crate) fn make_doc(

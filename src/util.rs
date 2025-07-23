@@ -1,4 +1,4 @@
-#[forbid(missing_docs)]
+// #![forbid(missing_docs)]
 use std::time::Duration;
 
 pub(crate) const TANTIVY_INDEX_MEMORY_BUDGET: usize = 50_000_000;
@@ -25,10 +25,10 @@ impl Event {
         timestamp: MilliSecondsSinceUnixEpoch,
     ) -> Self {
         Self {
-            id: id,
+            id,
             body: body.to_owned(),
-            sender: sender,
-            timestamp: timestamp,
+            sender,
+            timestamp,
         }
     }
 

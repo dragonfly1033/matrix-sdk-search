@@ -1,4 +1,4 @@
-#[forbid(missing_docs)]
+// #![forbid(missing_docs)]
 mod error;
 mod index;
 mod schema;

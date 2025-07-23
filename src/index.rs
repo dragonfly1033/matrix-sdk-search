@@ -1,3 +1,4 @@
+// #![forbid(missing_docs)]
 use crate::schema::RoomMessageSchema;
 use crate::writer::SearchIndexWriter;
 use crate::{util::*, IndexError};
@@ -80,7 +81,8 @@ impl RoomIndex {
 
         for (_score, doc_address) in results {
             let retrieved_doc: TantivyDocument = self.searcher.doc(doc_address)?;
-            for f in retrieved_doc.get_all(pk) { // TODO: what does this really do
+            for f in retrieved_doc.get_all(pk) {
+                // TODO: what does this really do
                 ret.push(format!("{f:?}"));
             }
         }

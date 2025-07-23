@@ -1,7 +1,4 @@
-#[forbid(missing_docs)]
-use matrix_sdk_search::{
-    Event, EventId, IndexError, RoomIndex, UserId,
-};
+use matrix_sdk_search::{Event, EventId, IndexError, RoomIndex, UserId};
 
 fn main() -> Result<(), IndexError> {
     let mut index = RoomIndex::new_in_ram().expect("big oops");
@@ -34,19 +31,19 @@ fn main() -> Result<(), IndexError> {
     let res = index.search("week", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
-        println!("")
+        println!();
     }
 
     let res = index.search("the", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
-        println!("")
+        println!();
     }
 
     let res = index.search("cuter", 10)?;
     for i in res.iter() {
         print!("{i:?}, ");
-        println!("")
+        println!();
     }
 
     Ok(())
